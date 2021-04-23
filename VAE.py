@@ -31,7 +31,7 @@ print("Pixel value normalize & shuffling Finished ...")
 
 
 
-# ## Create a sampling layer ##
+# ## Create a sampling layer ## NOT Use
 # class Sampling(layers.Layer):
 #     """Uses (z_mean, z_log_var) to sample z, the vector encoding a digit."""
 #
@@ -147,7 +147,7 @@ class VAE(keras.Model):
 
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
-vae.fit(shuffled_img, epochs=100, batch_size=162)
+vae.fit(shuffled_img, epochs=10, batch_size=81)
 
 z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 x_decoded = vae.decoder.predict(z_sample)
@@ -161,5 +161,7 @@ plt.show()
 
 # Save encoder
 encoder.save(encoder_path)
+print("Encoder model saved ... ")
 # Save decoder
 decoder.save(decoder_path)
+print("Decoder model saved ... ")
