@@ -21,7 +21,7 @@ for VDiff in file_list:
 
 V_diff = np.random.permutation(temp_stacking)
 print("VDiff value shuffling Finished ...")
-print(np.shape(V_diff))
+# print(np.shape(V_diff))
 
 
 encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model_epoch300.h5'
@@ -38,23 +38,21 @@ loc_z_mean = len(encoder.layers) - 11
 loc_z_log_var = len(encoder.layers) - 10
 z_mean = encoder.layers[loc_z_mean]
 z_log_var = encoder.layers[loc_z_log_var]
+print(z_mean.get_weights())
 z_mean_weights = z_mean.get_weights()[0]
 z_mean_bias = z_mean.get_weights()[1]
-z_log_var_weights = z_log_var.get_weights()[0]
-z_log_var_bias = z_log_var.get_weights()[1]
 print(np.shape(z_mean_weights))
 print(np.shape(z_mean_bias))
+z_log_var_weights = z_log_var.get_weights()[0]
+z_log_var_bias = z_log_var.get_weights()[1]
 
-z_weights = z_mean_weights + tf.exp(0.5 * z_log_var_weights)
-z_bias = z_mean_bias + tf.exp(0.5 * z_log_var_bias)
-# z_weights_init = tf.keras.initializers.constant(z_weights)
-# z_bias_init = tf.keras.initializers.constant(z_bias)
-z_weights_init = z_weights.numpy()
-z_bias_init = z_bias.numpy()
-z = tf.keras.layers.Dense(16, name="latent_z")
-assert z.weights == [z_weights_init, z_bias_init]
+z_weights = z_mean_weights + np.exp(0.5 * z_log_var_weights)
+z_bias = z_mean_bias + np.exp(0.5 * z_log_var_bias)
+# z_weights_init = z_weights.numpy()
+# z_bias_init = z_bias.numpy()
+z = tf.keras.layers.Dense(16, name="latent_z").set_weights([z_weights, z_bias])
 # z = tf.keras.layers.Dense(16, kernel_initializer=z_weights_init, bias_initializer=z_bias_init, name="latent_z")
-z.trainable = False # Freeze layer
+# z.trainable = False # Freeze layer
 print(z)
 
 # stage2_model = tf.keras.Sequential([tf.keras.Input(shape=(208,))])
