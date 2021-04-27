@@ -33,7 +33,7 @@ if (os.path.exists(encoder_path)):
 else:
     print("There is no file! Check " + encoder_path + ' ...')
 
-## Latent vector layer code ##
+## Making latent vector layer code ##
 loc_z_mean = len(encoder.layers) - 11
 loc_z_log_var = len(encoder.layers) - 10
 z_mean = encoder.layers[loc_z_mean]
@@ -42,29 +42,32 @@ z_mean_weights = z_mean.get_weights()[0]
 z_mean_bias = z_mean.get_weights()[1]
 z_log_var_weights = z_log_var.get_weights()[0]
 z_log_var_bias = z_log_var.get_weights()[1]
-shape_weights = np.shape(z_mean_weights)
-shape_bias = np.shape(z_mean_bias)
-epsilon_weight = tf.keras.backend.random_normal(shape_weights)
-epsilon_bias = tf.keras.backend.random_normal(shape_bias)
+print(np.shape(z_mean_weights))
+print(np.shape(z_mean_bias))
 
-z_weights = z_mean_weights + tf.exp(0.5 * z_log_var_weights) * epsilon_weight
-z_bias = z_mean_bias + tf.exp(0.5 * z_log_var_bias) * epsilon_bias
-z_weights_init = tf.keras.initializers.constant(z_weights)
-z_bias_init = tf.keras.initializers.constant(z_bias)
-z = tf.keras.layers.Dense(16, kernel_initializer=z_weights_init, bias_initializer=z_bias_init, name="latent_z")
-z.trainable = False
+z_weights = z_mean_weights + tf.exp(0.5 * z_log_var_weights)
+z_bias = z_mean_bias + tf.exp(0.5 * z_log_var_bias)
+# z_weights_init = tf.keras.initializers.constant(z_weights)
+# z_bias_init = tf.keras.initializers.constant(z_bias)
+z_weights_init = z_weights.numpy()
+z_bias_init = z_bias.numpy()
+z = tf.keras.layers.Dense(16, name="latent_z")
+assert z.weights == [z_weights_init, z_bias_init]
+# z = tf.keras.layers.Dense(16, kernel_initializer=z_weights_init, bias_initializer=z_bias_init, name="latent_z")
+z.trainable = False # Freeze layer
+print(z)
 
-stage2_model = tf.keras.Sequential([tf.keras.Input(shape=(208,))])
-stage2_model.add(tf.keras.layers.Dense(256, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(tf.keras.layers.Dense(128, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(tf.keras.layers.Dense(64, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(tf.keras.layers.Dense(32, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(z)
-stage2_model.summary()
+# stage2_model = tf.keras.Sequential([tf.keras.Input(shape=(208,))])
+# stage2_model.add(tf.keras.layers.Dense(256, activation="relu"))
+# stage2_model.add(tf.keras.layers.Dropout(0.3))
+# stage2_model.add(tf.keras.layers.Dense(128, activation="relu"))
+# stage2_model.add(tf.keras.layers.Dropout(0.3))
+# stage2_model.add(tf.keras.layers.Dense(64, activation="relu"))
+# stage2_model.add(tf.keras.layers.Dropout(0.3))
+# stage2_model.add(tf.keras.layers.Dense(32, activation="relu"))
+# stage2_model.add(tf.keras.layers.Dropout(0.3))
+# stage2_model.add(z)
+# stage2_model.summary()
 
 # layer1 = keras.layers.Dense(256, activation='relu')
 # layer2 = keras.layers.Dense(128, activation='relu')
