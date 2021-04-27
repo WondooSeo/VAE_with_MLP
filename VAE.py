@@ -147,7 +147,7 @@ class VAE(keras.Model):
 
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
-vae.fit(shuffled_img, epochs=300, batch_size=81)
+vae.fit(shuffled_img, epochs=1, batch_size=81)
 
 z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 x_decoded = vae.decoder.predict(z_sample)
@@ -165,3 +165,5 @@ print("Encoder model saved ... ")
 # Save decoder
 decoder.save(decoder_path)
 print("Decoder model saved ... ")
+vae.save_weights("C:/Users/mirac/Documents/Pycharm/VAE/" + 'vae_model_epoch300.tf')
+print("VAE model saved ... ")
