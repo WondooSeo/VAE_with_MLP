@@ -46,7 +46,7 @@ print("Pixel value normalize & shuffling Finished ...")
 
 ## Build the encoder ##
 
-encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model.h5'
+encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model_epoch300.h5'
 if (os.path.exists(encoder_path)):
     encoder = keras.models.load_model(encoder_path, compile=False)
     encoder.summary()
@@ -75,7 +75,7 @@ else:
 
 
 ## Build the decoder ##
-decoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'decoder_model.h5'
+decoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'decoder_model_epoch300.h5'
 if (os.path.exists(decoder_path)):
     decoder = keras.models.load_model(decoder_path, compile=False)
     decoder.summary()
@@ -147,7 +147,7 @@ class VAE(keras.Model):
 
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
-vae.fit(shuffled_img, epochs=10, batch_size=81)
+vae.fit(shuffled_img, epochs=300, batch_size=81)
 
 z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 x_decoded = vae.decoder.predict(z_sample)
