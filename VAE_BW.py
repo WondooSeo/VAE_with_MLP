@@ -27,6 +27,7 @@ for img in file_list:
     print(str(count) + " / " + str(data_num) + " Stack Finished ...")
 
 shuffled_img = np.random.permutation(temp_stacking) / 255
+shuffled_img = np.expand_dims(shuffled_img, -1)
 print("Pixel value normalize & shuffling Finished ...")
 
 
@@ -147,7 +148,7 @@ class VAE(keras.Model):
 
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
-vae.fit(shuffled_img, epochs=100, batch_size=162)
+vae.fit(shuffled_img, epochs=300, batch_size=387)
 
 z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 x_decoded = vae.decoder.predict(z_sample)
