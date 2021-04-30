@@ -2,7 +2,7 @@ import os
 import csv
 import numpy as np
 import tensorflow as tf
-from matplotlib import pyplot as plt
+from sklearn.model_selection import train_test_split
 
 
 path_dir = "C:/Users/mirac/Documents/Pycharm/VAE/Dataset_VDiff/"
@@ -23,6 +23,11 @@ for VDiff in file_list:
 
 V_diff = np.random.permutation(temp_stacking)
 print("VDiff value shuffling Finished ...")
+
+
+x_train, x_test = train_test_split(V_diff, random_state=999, test_size=0.3)
+x_test, x_val = train_test_split(V_diff, random_state=999, test_size=0.2)
+print("VDiff split Finished ...")
 
 
 encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model_epoch300.h5'
@@ -47,21 +52,28 @@ z_log_var_bias = z_log_var.get_weights()[1]
 z_weights = z_mean_weights + np.exp(0.5 * z_log_var_weights)
 z_bias = z_mean_bias + np.exp(0.5 * z_log_var_bias)
 
-stage2_model = tf.keras.Sequential([tf.keras.Input(shape=(208))])
-stage2_model.add(tf.keras.layers.Dense(256, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(tf.keras.layers.Dense(128, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(tf.keras.layers.Dense(64, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(tf.keras.layers.Dense(32, activation="relu"))
-stage2_model.add(tf.keras.layers.Dropout(0.3))
-stage2_model.add(tf.keras.layers.Dense(16, activation="relu"))
-stage2_model.layers[-1].set_weights([z_weights, z_bias])
-stage2_model.layers[-1].trainable = False
-stage2_model.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
-stage2_model.summary()
 
-stage2_model.fit(V_diff, epochs=1, batch_size=36)
-test_VDiff = V_diff[0]
-print(stage2_model.predict(test_VDiff))
+def create_model(weights, bias):
+    MLP_model = tf.keras.Sequential()
+    MLP_model.add(tf.keras.layers.Flatten(input_shape=(208, 1)))
+    MLP_model.add(tf.keras.layers.Dense(256, activation="relu"))
+    MLP_model.add(tf.keras.layers.Dropout(0.3))
+    MLP_model.add(tf.keras.layers.Dense(128, activation="relu"))
+    MLP_model.add(tf.keras.layers.Dropout(0.3))
+    MLP_model.add(tf.keras.layers.Dense(64, activation="relu"))
+    MLP_model.add(tf.keras.layers.Dropout(0.3))
+    MLP_model.add(tf.keras.layers.Dense(32, activation="relu"))
+    MLP_model.add(tf.keras.layers.Dropout(0.3))
+    MLP_model.add(tf.keras.layers.Dense(16, activation="relu"))
+    MLP_model.add(tf.keras.layers.Dropout(0.3))
+    MLP_model.add(tf.keras.layers.Dense(16))
+    MLP_model.layers[-1].set_weights([weights, bias])
+    MLP_model.layers[-1].trainable = False
+    MLP_model.compile(optimizer='adam', loss='mse', metrics=['mae', 'mse', 'accuracy'])
+    MLP_model.summary()
+    return MLP_model
+
+
+stage2_model = create_model(weights=z_weights, bias=z_bias)
+stage2_model.fit(x_train, epochs=1, batch_size=18, validation_data=x_val)
+print(stage2_model.predict(x_test))
