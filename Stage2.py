@@ -39,23 +39,24 @@ if (os.path.exists(encoder_path)):
 else:
     print("There is no file! Check " + encoder_path + ' ...')
 
-## Making latent vector layer code ##
-loc_z_mean = len(encoder.layers) - 11
-loc_z_log_var = len(encoder.layers) - 10
-z_mean = encoder.layers[loc_z_mean]
-z_log_var = encoder.layers[loc_z_log_var]
-z_mean_weights = z_mean.get_weights()[0]
-z_mean_bias = z_mean.get_weights()[1]
-z_log_var_weights = z_log_var.get_weights()[0]
-z_log_var_bias = z_log_var.get_weights()[1]
+# NO USE
+# ## Making latent vector layer code ##
+# loc_z_mean = len(encoder.layers) - 11
+# loc_z_log_var = len(encoder.layers) - 10
+# z_mean = encoder.layers[loc_z_mean]
+# z_log_var = encoder.layers[loc_z_log_var]
+# z_mean_weights = z_mean.get_weights()[0]
+# z_mean_bias = z_mean.get_weights()[1]
+# z_log_var_weights = z_log_var.get_weights()[0]
+# z_log_var_bias = z_log_var.get_weights()[1]
+#
+# z_weights = z_mean_weights + np.exp(0.5 * z_log_var_weights)
+# z_bias = z_mean_bias + np.exp(0.5 * z_log_var_bias)
 
-z_weights = z_mean_weights + np.exp(0.5 * z_log_var_weights)
-z_bias = z_mean_bias + np.exp(0.5 * z_log_var_bias)
 
-
-def create_model(weights, bias):
+def create_model():
     MLP_model = tf.keras.Sequential()
-    MLP_model.add(tf.keras.layers.Flatten(input_shape=(208, 1)))
+    MLP_model.add(tf.keras.layers.Input(shape=(208, 1)))
     MLP_model.add(tf.keras.layers.Dense(256, activation="relu"))
     MLP_model.add(tf.keras.layers.Dropout(0.3))
     MLP_model.add(tf.keras.layers.Dense(128, activation="relu"))
@@ -65,15 +66,11 @@ def create_model(weights, bias):
     MLP_model.add(tf.keras.layers.Dense(32, activation="relu"))
     MLP_model.add(tf.keras.layers.Dropout(0.3))
     MLP_model.add(tf.keras.layers.Dense(16, activation="relu"))
-    MLP_model.add(tf.keras.layers.Dropout(0.3))
-    MLP_model.add(tf.keras.layers.Dense(16))
-    MLP_model.layers[-1].set_weights([weights, bias])
-    MLP_model.layers[-1].trainable = False
     MLP_model.compile(optimizer='adam', loss='mse', metrics=['mae', 'mse', 'accuracy'])
     MLP_model.summary()
     return MLP_model
 
 
-stage2_model = create_model(weights=z_weights, bias=z_bias)
-stage2_model.fit(x_train, epochs=1, batch_size=18, validation_data=x_val)
+stage2_model = create_model()
+stage2_model.fit(x_train, epochs=1, batch_size=18, validation_data=(x_val,))
 print(stage2_model.predict(x_test))
