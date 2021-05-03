@@ -30,7 +30,7 @@ if bw_dataset_thorax_data_num == vdiff_data_num:
         dat = open(vdiff_path_dir + VDiff)
         reader = csv.reader(dat)
         lines = list(reader)
-        lines = np.transpose(lines)
+        lines = np.squeeze(lines)
         vdiff_stacking.append(lines)
         vdiff_count += 1
         print(str(vdiff_count) + " / " + data_num + " VDiff Stack Finished ...")
@@ -41,7 +41,7 @@ else:
 
 
 # Normalize pixel value & expand dims to fit the input of encoder
-bw_dataset_thorax_stacking = np.expand_dims(bw_dataset_thorax_stacking / 255, -1)
+bw_dataset_thorax_stacking = np.expand_dims(bw_dataset_thorax_stacking, -1) / 255
 
 encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model_BW.h5'
 if (os.path.exists(encoder_path)):
@@ -78,7 +78,7 @@ print("Data split Finished ...")
 
 
 def create_model():
-    MLP_model = tf.keras.Sequential()
+    MLP_model = tf.keras.Sequential(name='MLP_Model')
     MLP_model.add(tf.keras.layers.Input(shape=(208,)))
     MLP_model.add(tf.keras.layers.Dense(256, activation="relu"))
     MLP_model.add(tf.keras.layers.Dropout(0.3))
@@ -88,13 +88,16 @@ def create_model():
     MLP_model.add(tf.keras.layers.Dropout(0.3))
     MLP_model.add(tf.keras.layers.Dense(32, activation="relu"))
     MLP_model.add(tf.keras.layers.Dropout(0.3))
-    MLP_model.add(tf.keras.layers.Dense(16, activation="relu"))
+    MLP_model.add(tf.keras.layers.Dense(16))
     MLP_model.compile(optimizer='adam', loss='mse', metrics=['mae', 'mse', 'accuracy'])
     MLP_model.summary()
     return MLP_model
 
 
 print(np.shape(x_train))
+print(np.shape(y_train))
 stage2_model = create_model()
-stage2_model.fit(x_train, y_train, validation_split=0.1, epochs=1, batch_size=18)
-print(stage2_model.predict(x_test))
+stage2_model.fit(x_train, y_train, validation_split=0.1, epochs=1, batch_size=18, verbose=1)
+test_scores = stage2_model.evaluate(x_test, y_test, verbose=0)
+print("Test Loss : ", test_scores[0])
+print("Test Accuracy : ", test_scores[1])
