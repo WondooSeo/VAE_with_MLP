@@ -21,13 +21,9 @@
 # yhat = model.predict(x_input, verbose=1)
 # print(yhat)
 
-import tensorflow as tf
+
 import numpy as np
 
-print(tf.__version__)
+z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 
-x_train = np.random.uniform(0,1, (460,208))
-y_train = np.random.uniform(0,1, (460,16))
-
-print(x_train[0])
-print(np.shape(x_train))
+print(np.shape(z_sample))

@@ -27,7 +27,7 @@ if bw_dataset_thorax_data_num == vdiff_data_num:
         lines = list(reader)
         lines = np.squeeze(lines)
         float_lines = [float(i) for i in lines]
-        float_lines = np.asarray(float_lines)
+        float_lines = np.transpose(np.reshape(np.asarray(float_lines), -1))
         vdiff_stacking.append(float_lines)
         vdiff_count += 1
         print(str(vdiff_count) + " / " + data_num + " VDiff Stack Finished ...")
@@ -59,25 +59,31 @@ else:
 encoded = encoder.predict(bw_dataset_thorax_stacking)
 # print(np.shape(encoded)) → Result : (3, 576, 16)
 # Latent vector z is on third (∵ [z_mean, z_log_var, z])
-encoder_result = encoded[2]
+encoder_result = np.asarray(encoded[2])
+
+
+# Extremely important!!!
+# Must shpae (num, 1, dim), not (num, dim, 1)
+encoder_result = np.expand_dims(encoder_result, 1)
+vdiff_stacking = np.expand_dims(vdiff_stacking, 1)
 
 
 x_train, x_test, y_train, y_test = train_test_split(vdiff_stacking, encoder_result, shuffle=False, test_size=0.2)
 print("Data split Finished ...")
 
 
-# NO USE
-# ## Making latent vector layer code ##
-# loc_z_mean = len(encoder.layers) - 11
-# loc_z_log_var = len(encoder.layers) - 10
-# z_mean = encoder.layers[loc_z_mean]
-# z_log_var = encoder.layers[loc_z_log_var]
-# z_mean_weights = z_mean.get_weights()[0]
-# z_mean_bias = z_mean.get_weights()[1]
-# z_log_var_weights = z_log_var.get_weights()[0]
-# z_log_var_bias = z_log_var.get_weights()[1]
-# z_weights = z_mean_weights + np.exp(0.5 * z_log_var_weights)
-# z_bias = z_mean_bias + np.exp(0.5 * z_log_var_bias)
+# # NO USE
+# # ## Making latent vector layer code ##
+# # loc_z_mean = len(encoder.layers) - 11
+# # loc_z_log_var = len(encoder.layers) - 10
+# # z_mean = encoder.layers[loc_z_mean]
+# # z_log_var = encoder.layers[loc_z_log_var]
+# # z_mean_weights = z_mean.get_weights()[0]
+# # z_mean_bias = z_mean.get_weights()[1]
+# # z_log_var_weights = z_log_var.get_weights()[0]
+# # z_log_var_bias = z_log_var.get_weights()[1]
+# # z_weights = z_mean_weights + np.exp(0.5 * z_log_var_weights)
+# # z_bias = z_mean_bias + np.exp(0.5 * z_log_var_bias)
 
 
 def create_model():
@@ -96,11 +102,11 @@ def create_model():
     return MLP_model
 
 
-print(np.shape(x_train))
-print(x_train[0])
-print(np.shape(y_train))
 stage2_model = create_model()
-stage2_model.fit(x_train, y_train, validation_split=0.3, epochs=1, batch_size=18, verbose=1)
+stage2_model.fit(x_train, y_train, validation_split=0.3, epochs=300, batch_size=18, verbose=1)
 test_scores = stage2_model.evaluate(x_test, y_test, verbose=0)
 print("Test Loss : ", test_scores[0])
 print("Test Accuracy : ", test_scores[1])
+
+stage2_model_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + "stage2_MLP_model_epoch300.h5"
+stage2_model.save(stage2_model_path)
