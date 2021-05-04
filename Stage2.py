@@ -20,20 +20,23 @@ vdiff_count = 0
 
 if bw_dataset_thorax_data_num == vdiff_data_num:
     data_num = str(vdiff_data_num)
-    for BWimg in bw_dataset_thorax_file_list:
-        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg))
-        bw_dataset_thorax_stacking.append(np_img)
-        bw_count += 1
-        print(str(bw_count) + " / " + str(data_num) + " Thorax Stack Finished ...")
 
     for VDiff in vdiff_file_list:
         dat = open(vdiff_path_dir + VDiff)
         reader = csv.reader(dat)
         lines = list(reader)
         lines = np.squeeze(lines)
-        vdiff_stacking.append(lines)
+        float_lines = [float(i) for i in lines]
+        float_lines = np.asarray(float_lines)
+        vdiff_stacking.append(float_lines)
         vdiff_count += 1
         print(str(vdiff_count) + " / " + data_num + " VDiff Stack Finished ...")
+
+    for BWimg in bw_dataset_thorax_file_list:
+        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg))
+        bw_dataset_thorax_stacking.append(np_img)
+        bw_count += 1
+        print(str(bw_count) + " / " + str(data_num) + " Thorax Stack Finished ...")
 
 else:
     print("Data numbers are not equal! Try again ...")
@@ -79,8 +82,7 @@ print("Data split Finished ...")
 
 def create_model():
     MLP_model = tf.keras.Sequential(name='MLP_Model')
-    MLP_model.add(tf.keras.layers.Input(shape=(208,)))
-    MLP_model.add(tf.keras.layers.Dense(256, activation="relu"))
+    MLP_model.add(tf.keras.layers.Dense(256, activation="relu", input_shape=(208,)))
     MLP_model.add(tf.keras.layers.Dropout(0.3))
     MLP_model.add(tf.keras.layers.Dense(128, activation="relu"))
     MLP_model.add(tf.keras.layers.Dropout(0.3))
@@ -95,9 +97,10 @@ def create_model():
 
 
 print(np.shape(x_train))
+print(x_train[0])
 print(np.shape(y_train))
 stage2_model = create_model()
-stage2_model.fit(x_train, y_train, validation_split=0.1, epochs=1, batch_size=18, verbose=1)
+stage2_model.fit(x_train, y_train, validation_split=0.3, epochs=1, batch_size=18, verbose=1)
 test_scores = stage2_model.evaluate(x_test, y_test, verbose=0)
 print("Test Loss : ", test_scores[0])
 print("Test Accuracy : ", test_scores[1])
