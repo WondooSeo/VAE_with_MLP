@@ -16,6 +16,6 @@ import cv2
 #     count += 1
 #     print(str(count) + " / " + str(data_num) + " Change Finished ...")
 
-dat = cv2.imread("/Result_of_model.png")
+dat = cv2.imread("C:/Users/mirac/Documents/Pycharm/VAE/Result_of_model_DO_50.png")
 dat_gray = cv2.cvtColor(dat, cv2.COLOR_BGR2GRAY)
-cv2.imwrite("C:/Users/mirac/Documents/Pycharm/VAE/Result_of_model_BW.png", dat_gray)
+cv2.imwrite("C:/Users/mirac/Documents/Pycharm/VAE/Result_of_model_DO_50_BW.png", dat_gray)

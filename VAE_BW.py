@@ -6,6 +6,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import layers
+from sklearn.model_selection import train_test_split
 # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' # Avoid the error "CPU supports"
 # os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices' # Avoid the error "Not creating XLA devices, tf_xla_enable_xla_devices not set"
 
@@ -47,7 +48,7 @@ print("Pixel value normalize & shuffling Finished ...")
 
 ## Build the encoder ##
 
-encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model_BW.h5'
+encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model_BW_epoch300_50.h5'
 if (os.path.exists(encoder_path)):
     encoder = keras.models.load_model(encoder_path, compile=False)
     encoder.summary()
@@ -76,7 +77,7 @@ else:
 
 
 ## Build the decoder ##
-decoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'decoder_model_BW.h5'
+decoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'decoder_model_BW_epoch300_50.h5'
 if (os.path.exists(decoder_path)):
     decoder = keras.models.load_model(decoder_path, compile=False)
     decoder.summary()
@@ -146,9 +147,10 @@ class VAE(keras.Model):
 # mnist_digits = np.concatenate([x_train, x_test], axis=0)
 # shuffled_img = np.expand_dims(shuffled_img, -1).astype("float32") / 255
 
+x_train, dummy = train_test_split(shuffled_img, test_size=0.5)
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
-vae.fit(shuffled_img, epochs=300, batch_size=387)
+vae.fit(x_train, epochs=300, batch_size=18)
 
 z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 x_decoded = vae.decoder.predict(z_sample)
