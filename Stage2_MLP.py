@@ -103,10 +103,10 @@ def create_model():
 
 
 stage2_model = create_model()
-stage2_model.fit(x_train, y_train, validation_split=0.5, epochs=10, batch_size=10, verbose=1, shuffle=True)
+stage2_model.fit(x_train, y_train, validation_split=0.5, epochs=300, batch_size=10, verbose=1, shuffle=True)
 test_scores = stage2_model.evaluate(x_test, y_test, verbose=0)
 print("Test Loss : ", test_scores[0])
 print("Test Accuracy : ", test_scores[1])
 
-stage2_model_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + "stage2_MLP_model_EIT_FER.h5"
+stage2_model_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + "stage2_MLP_EIT_FER_300.h5"
 stage2_model.save(stage2_model_path)
