@@ -33,7 +33,7 @@ if bw_dataset_thorax_data_num == vdiff_data_num:
         print(str(vdiff_count) + " / " + data_num + " VDiff Stack Finished ...")
 
     for BWimg in bw_dataset_thorax_file_list:
-        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg))
+        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg)) / 255
         bw_dataset_thorax_stacking.append(np_img)
         bw_count += 1
         print(str(bw_count) + " / " + str(data_num) + " Thorax Stack Finished ...")
@@ -44,7 +44,7 @@ else:
 
 
 # Normalize pixel value & expand dims to fit the input of encoder
-bw_dataset_thorax_stacking = np.expand_dims(bw_dataset_thorax_stacking, -1) / 255
+bw_dataset_thorax_stacking = np.expand_dims(bw_dataset_thorax_stacking, -1)
 
 encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_EIT_FER.h5'
 if (os.path.exists(encoder_path)):

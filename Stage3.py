@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from matplotlib import pyplot as plt
 
-stage2_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'stage2_MLP_EIT_FER.h5'
+stage2_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'stage2_MLP_EIT_FER_300.h5'
 if (os.path.exists(stage2_path)):
     stage2 = tf.keras.models.load_model(stage2_path, compile=False)
     # encoder.summary()
