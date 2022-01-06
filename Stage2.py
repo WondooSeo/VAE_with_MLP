@@ -6,8 +6,8 @@ from PIL import Image
 from sklearn.model_selection import train_test_split
 
 
-bw_dataset_thorax_path_dir = "C:/Users/mirac/Documents/Pycharm/VAE/BW_Dataset_Thorax/"
-vdiff_path_dir = "C:/Users/mirac/Documents/Pycharm/VAE/Dataset_VDiff/"
+bw_dataset_thorax_path_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_FER/"
+vdiff_path_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_V/"
 bw_dataset_thorax_file_list = os.listdir(bw_dataset_thorax_path_dir)
 vdiff_file_list = os.listdir(vdiff_path_dir)
 bw_dataset_thorax_data_num = len(vdiff_file_list)
@@ -46,7 +46,7 @@ else:
 # Normalize pixel value & expand dims to fit the input of encoder
 bw_dataset_thorax_stacking = np.expand_dims(bw_dataset_thorax_stacking, -1) / 255
 
-encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_model_BW_epoch300_Split50.h5'
+encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_EIT_FER.h5'
 if (os.path.exists(encoder_path)):
     encoder = tf.keras.models.load_model(encoder_path, compile=False)
     # encoder.summary()
@@ -68,7 +68,7 @@ encoder_result = np.expand_dims(encoder_result, 1)
 vdiff_stacking = np.expand_dims(vdiff_stacking, 1)
 
 
-x_train, x_test, y_train, y_test = train_test_split(vdiff_stacking, encoder_result, shuffle=False, test_size=0.2)
+x_train, x_test, y_train, y_test = train_test_split(vdiff_stacking, encoder_result, shuffle=True, test_size=0.2)
 print("Data split Finished ...")
 
 
@@ -103,10 +103,10 @@ def create_model():
 
 
 stage2_model = create_model()
-stage2_model.fit(x_train, y_train, validation_split=0.5, epochs=300, batch_size=18, verbose=1)
+stage2_model.fit(x_train, y_train, validation_split=0.5, epochs=10, batch_size=10, verbose=1, shuffle=True)
 test_scores = stage2_model.evaluate(x_test, y_test, verbose=0)
 print("Test Loss : ", test_scores[0])
 print("Test Accuracy : ", test_scores[1])
 
-stage2_model_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + "stage2_MLP_model_BW_epoch300_DO50_Split50.h5"
+stage2_model_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + "stage2_MLP_model_EIT_FER.h5"
 stage2_model.save(stage2_model_path)
