@@ -33,7 +33,7 @@ if bw_dataset_thorax_data_num == vdiff_data_num:
         print(str(vdiff_count) + " / " + data_num + " VDiff Stack Finished ...")
 
     for BWimg in bw_dataset_thorax_file_list:
-        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg))
+        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg)) / 255 + 0.0001
         bw_dataset_thorax_stacking.append(np_img)
         bw_count += 1
         print(str(bw_count) + " / " + str(data_num) + " Thorax Stack Finished ...")
@@ -108,5 +108,5 @@ test_scores = stage2_model.evaluate(x_test, y_test, verbose=0)
 print("Test Loss : ", test_scores[0])
 print("Test Accuracy : ", test_scores[1])
 
-stage2_model_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + "stage2_MLP_EIT_FER.h5"
+stage2_model_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + "MLP_EIT_FER.h5"
 stage2_model.save(stage2_model_path)

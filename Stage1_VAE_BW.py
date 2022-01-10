@@ -20,7 +20,7 @@ temp_stacking = []
 count = 0
 
 for img in file_list:
-    np_img = np.asarray(Image.open(path_dir + img))
+    np_img = np.asarray(Image.open(path_dir + img)) / 255 + 0.0001
     # tensor_img = tf.convert_to_tensor(np_img)
     # temp_stacking.append(tensor_img)
     temp_stacking.append(np_img)
