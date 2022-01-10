@@ -22,8 +22,8 @@ if (os.path.exists(decoder_path)):
 else:
     print("There is no file! Check " + decoder_path + ' ...')
 
-test_VDiff_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_V/EIT_V_170.csv"
-# test_VDiff_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_V/EIT_V_460.csv"
+# test_VDiff_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_V/EIT_V_215.csv"
+test_VDiff_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_V/EIT_V_460.csv"
 dat = open(test_VDiff_dir)
 reader = csv.reader(dat)
 lines = list(reader)

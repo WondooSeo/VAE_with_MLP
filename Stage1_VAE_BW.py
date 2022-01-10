@@ -20,14 +20,14 @@ temp_stacking = []
 count = 0
 
 for img in file_list:
-    np_img = np.asarray(Image.open(path_dir + img))
+    np_img = np.asarray(Image.open(path_dir + img)) / 255
     # tensor_img = tf.convert_to_tensor(np_img)
     # temp_stacking.append(tensor_img)
     temp_stacking.append(np_img)
     count += 1
     print(str(count) + " / " + str(data_num) + " Stack Finished ...")
 
-shuffled_img = np.random.permutation(temp_stacking) / 255
+shuffled_img = np.random.permutation(temp_stacking)
 shuffled_img = np.expand_dims(shuffled_img, -1)
 print("Pixel value normalize & shuffling Finished ...")
 
@@ -150,7 +150,7 @@ class VAE(keras.Model):
 x_train, dummy = train_test_split(shuffled_img, test_size=0.5)
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
-vae.fit(x_train, epochs=300, batch_size=10)
+vae.fit(x_train, epochs=150, batch_size=10)
 
 z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 x_decoded = vae.decoder.predict(z_sample)
