@@ -33,7 +33,7 @@ if bw_dataset_thorax_data_num == vdiff_data_num:
         print(str(vdiff_count) + " / " + data_num + " VDiff Stack Finished ...")
 
     for BWimg in bw_dataset_thorax_file_list:
-        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg)) / 255
+        np_img = np.asarray(Image.open(bw_dataset_thorax_path_dir + BWimg))
         bw_dataset_thorax_stacking.append(np_img)
         bw_count += 1
         print(str(bw_count) + " / " + str(data_num) + " Thorax Stack Finished ...")
@@ -68,7 +68,7 @@ encoder_result = np.expand_dims(encoder_result, 1)
 vdiff_stacking = np.expand_dims(vdiff_stacking, 1)
 
 
-x_train, x_test, y_train, y_test = train_test_split(vdiff_stacking, encoder_result, shuffle=True, test_size=0.2)
+x_train, x_test, y_train, y_test = train_test_split(vdiff_stacking, encoder_result, shuffle=True, test_size=0.3)
 print("Data split Finished ...")
 
 
@@ -103,7 +103,7 @@ def create_model():
 
 
 stage2_model = create_model()
-stage2_model.fit(x_train, y_train, validation_split=0.5, epochs=300, batch_size=10, verbose=1, shuffle=True)
+stage2_model.fit(x_train, y_train, validation_split=0.3, epochs=300, batch_size=10, verbose=1, shuffle=True)
 test_scores = stage2_model.evaluate(x_test, y_test, verbose=0)
 print("Test Loss : ", test_scores[0])
 print("Test Accuracy : ", test_scores[1])

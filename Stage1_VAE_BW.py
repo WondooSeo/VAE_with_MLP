@@ -20,7 +20,7 @@ temp_stacking = []
 count = 0
 
 for img in file_list:
-    np_img = np.asarray(Image.open(path_dir + img)) / 255
+    np_img = np.asarray(Image.open(path_dir + img))
     # tensor_img = tf.convert_to_tensor(np_img)
     # temp_stacking.append(tensor_img)
     temp_stacking.append(np_img)
@@ -147,7 +147,7 @@ class VAE(keras.Model):
 # mnist_digits = np.concatenate([x_train, x_test], axis=0)
 # shuffled_img = np.expand_dims(shuffled_img, -1).astype("float32") / 255
 
-x_train, dummy = train_test_split(shuffled_img, test_size=0.5)
+x_train, dummy = train_test_split(shuffled_img, test_size=0.3)
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
 vae.fit(x_train, epochs=300, batch_size=10)
