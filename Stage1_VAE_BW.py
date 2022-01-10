@@ -150,7 +150,7 @@ class VAE(keras.Model):
 x_train, dummy = train_test_split(shuffled_img, test_size=0.5)
 vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
-vae.fit(x_train, epochs=150, batch_size=10)
+vae.fit(x_train, epochs=300, batch_size=10)
 
 z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 x_decoded = vae.decoder.predict(z_sample)
