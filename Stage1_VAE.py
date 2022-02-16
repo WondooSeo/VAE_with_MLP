@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 
 
 ## Make a dataset with shuffling ##
-path_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_FER/"
+path_dir = "Write your dir"
 file_list = os.listdir(path_dir)
 data_num = len(file_list)
 temp_stacking = []
@@ -48,7 +48,7 @@ print("Pixel value normalize & shuffling Finished ...")
 
 ## Build the encoder ##
 
-encoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'encoder_EIT_FER.h5'
+encoder_path = "Write your dir" + 'encoder.h5'
 if (os.path.exists(encoder_path)):
     encoder = keras.models.load_model(encoder_path, compile=False)
     encoder.summary()
@@ -77,7 +77,7 @@ else:
 
 
 ## Build the decoder ##
-decoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'decoder_EIT_FER.h5'
+decoder_path = "Write your dir" + 'decoder.h5'
 if (os.path.exists(decoder_path)):
     decoder = keras.models.load_model(decoder_path, compile=False)
     decoder.summary()
@@ -152,11 +152,11 @@ vae = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
 vae.fit(x_train, epochs=300, batch_size=10)
 
-z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
-x_decoded = vae.decoder.predict(z_sample)
-plt.imshow(np.reshape(x_decoded, (128, 128, 1)))
-plt.axis('off')
-plt.show()
+# z_sample = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+# x_decoded = vae.decoder.predict(z_sample)
+# plt.imshow(np.reshape(x_decoded, (128, 128, 1)))
+# plt.axis('off')
+# plt.show()
 
 ## Latent vector layer code ##
 # loc_z = len(encoder.layers) - 1
