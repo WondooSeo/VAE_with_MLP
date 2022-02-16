@@ -4,7 +4,7 @@
 
 Language : Keras
 
-This code is self-made version of https://arxiv.org/abs/1810.10112.
+This code is self-made version of https://arxiv.org/abs/1810.10112 (A learning-based method for solving ill-posed nonlinear inverse problems: a simulation study of Lung EIT).
 
 Stage 1 : Training VAE with EIT data
 
