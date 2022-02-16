@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 from matplotlib import pyplot as plt
 
-stage2_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'MLP_EIT_FER.h5'
+stage2_path = "Write your dir" + 'MLP.h5'
 if (os.path.exists(stage2_path)):
     stage2 = tf.keras.models.load_model(stage2_path, compile=False)
     # encoder.summary()
@@ -13,7 +13,7 @@ if (os.path.exists(stage2_path)):
 else:
     print("There is no file! Check " + stage2_path + ' ...')
 
-decoder_path = "C:/Users/mirac/Documents/Pycharm/VAE/" + 'decoder_EIT_FER.h5'
+decoder_path = "Write your dir" + 'decoder.h5'
 if (os.path.exists(decoder_path)):
     decoder = tf.keras.models.load_model(decoder_path, compile=False)
     # encoder.summary()
@@ -22,8 +22,7 @@ if (os.path.exists(decoder_path)):
 else:
     print("There is no file! Check " + decoder_path + ' ...')
 
-# test_VDiff_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_V/EIT_V_215.csv"
-test_VDiff_dir = "C:/Users/mirac/Documents/Pycharm/VAE/EIT_V/EIT_V_460.csv"
+test_VDiff_dir = "Write your dir"
 
 dat = open(test_VDiff_dir)
 reader = csv.reader(dat)
