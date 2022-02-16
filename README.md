@@ -14,4 +14,4 @@ This structure works well, but need modification of path or else.
 
 # Need more modification!
 
-This codes are seperated with 3 files. Have to integrate in one file.
+This codes are seperated with 3 files follow by 3 stages in paper. Have to integrate in one file.
