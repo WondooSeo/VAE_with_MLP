@@ -11,3 +11,7 @@ Stage 2 : Training MLP with voltage - latent vector of VAE pairs
 Stage 3 : Call encoder of VAE and MLP, and show the result
 
 This structure works well, but need modification of path or else.
+
+# Need more modification!
+
+This codes are seperated with 3 files. Have to integrate in one file.
