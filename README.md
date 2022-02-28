@@ -2,7 +2,7 @@
 
 # VAE with MLP
 
-Language : Keras
+Language : Python 3 & Keras
 
 This code is self-made version of https://arxiv.org/abs/1810.10112 . [^1]
 
