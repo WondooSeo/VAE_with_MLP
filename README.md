@@ -4,6 +4,8 @@
 
 Language : Python 3 & Keras
 
+Based on [Keras VAE code example](https://keras.io/examples/generative/vae/)
+
 This code is self-made version of https://arxiv.org/abs/1810.10112 . [^1]
 
 Stage 1 : Training VAE with EIT data
